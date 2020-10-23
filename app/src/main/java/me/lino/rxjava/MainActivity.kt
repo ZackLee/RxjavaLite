@@ -3,6 +3,7 @@ package me.lino.rxjava
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import me.lino.rxjava.thread.Schedulers
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,19 +12,22 @@ class MainActivity : AppCompatActivity() {
 
         LinoObservable.create(object : LinoOnSubscriber<Int> {
             override fun setObserver(observer: LinoObserver<Int>) {
+                Log.d(TAG, "上游线程：${Thread.currentThread().name}")
                 observer.onNext(6)
                 observer.onNext(66)
                 observer.onNext(666)
                 observer.onComplete()
             }
-        }).map { item -> "map 操作符转换后的数据${item}" }
-
+        }).subscribeOn(Schedulers.IO)
+            .map { item -> "map 操作符转换后的数据${item}" }
+            .observerOn(Schedulers.MAIN)
             .setObserver(object : LinoObserver<String> {
                 override fun onSubscribe() {
                     Log.d(TAG, "onSubscribe")
                 }
 
                 override fun onNext(t: String) {
+                    Log.d(TAG, "下游线程：${Thread.currentThread().name}")
                     Log.d(TAG, "onNext:${t}")
                 }
 

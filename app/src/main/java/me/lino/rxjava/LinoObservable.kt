@@ -1,5 +1,7 @@
 package me.lino.rxjava
 
+import me.lino.rxjava.thread.Schedulers
+
 class LinoObservable<T>(onSubscriber: LinoOnSubscriber<T>) {
     var source: LinoOnSubscriber<T>? = onSubscriber
 
@@ -16,8 +18,18 @@ class LinoObservable<T>(onSubscriber: LinoOnSubscriber<T>) {
 
     //转换 T -> R
     fun <R> map(func: (T) -> R): LinoObservable<R> {
-        val map = LinoMapObservable(this.source!!,func)
+        val map = LinoMapObservable(this.source!!, func)
         return LinoObservable(map)
+    }
+
+    fun subscribeOn(thread: Int): LinoObservable<T> {
+        val subscriber = LinoSubscribeObservable(this.source!!, thread)
+        return LinoObservable(subscriber)
+    }
+
+    fun observerOn(thread: Int): LinoObservable<T> {
+        val subscriber = LinoObserverObservable(this.source!!, thread)
+        return LinoObservable(subscriber)
     }
 
 }
