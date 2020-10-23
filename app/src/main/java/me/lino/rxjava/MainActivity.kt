@@ -16,19 +16,21 @@ class MainActivity : AppCompatActivity() {
                 observer.onNext(666)
                 observer.onComplete()
             }
-        }).setObserver(object : LinoObserver<Int> {
-            override fun onSubscribe() {
-                Log.d(TAG, "onSubscribe")
-            }
+        }).map { item -> "map 操作符转换后的数据${item}" }
 
-            override fun onNext(t: Int) {
-                Log.d(TAG, "onNext:${t}")
-            }
+            .setObserver(object : LinoObserver<String> {
+                override fun onSubscribe() {
+                    Log.d(TAG, "onSubscribe")
+                }
 
-            override fun onComplete() {
-                Log.d(TAG, "onComplete()")
-            }
-        })
+                override fun onNext(t: String) {
+                    Log.d(TAG, "onNext:${t}")
+                }
+
+                override fun onComplete() {
+                    Log.d(TAG, "onComplete()")
+                }
+            })
     }
 
     companion object {
