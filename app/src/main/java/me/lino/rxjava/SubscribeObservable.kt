@@ -3,18 +3,18 @@ package me.lino.rxjava
 import me.lino.rxjava.thread.Schedulers
 
 
-class LinoSubscribeObservable<T>(
-    val source: LinoOnSubscriber<T>,
+class SubscribeObservable<T>(
+    private val source: OnSubscriber<T>,
     private val thread: Int
-) : LinoOnSubscriber<T> {
+) : OnSubscriber<T> {
 
-    override fun setObserver(downStream: LinoObserver<T>) {
+    override fun setObserver(downStream: Observer<T>) {
         val observable = LinoSubscribeObserver(downStream)
         //提交任务给指定线程
         Schedulers.INSTANCE.submitSubscribeWork(source, observable, thread)
     }
 
-    class LinoSubscribeObserver<T>(private val downStream: LinoObserver<T>) : LinoObserver<T> {
+    class LinoSubscribeObserver<T>(private val downStream: Observer<T>) : Observer<T> {
         override fun onSubscribe() {
             downStream.onSubscribe()
         }

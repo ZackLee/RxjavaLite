@@ -3,8 +3,8 @@ package me.lino.rxjava.thread
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import me.lino.rxjava.LinoObserver
-import me.lino.rxjava.LinoOnSubscriber
+import me.lino.rxjava.Observer
+import me.lino.rxjava.OnSubscriber
 import java.util.concurrent.Executors
 
 public class Schedulers() {
@@ -28,8 +28,8 @@ public class Schedulers() {
 
 
     fun <T> submitSubscribeWork(
-        source: LinoOnSubscriber<T>, //上游
-        downStream: LinoObserver<T>,//下游
+        source: OnSubscriber<T>, //上游
+        downStream: Observer<T>,//下游
         thread: Int//指定的线程
     ) {
         when (thread) {

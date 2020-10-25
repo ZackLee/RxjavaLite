@@ -2,20 +2,20 @@ package me.lino.rxjava
 
 import me.lino.rxjava.thread.Schedulers
 
-class LinoObserverObservable<T>(
-    private val source: LinoOnSubscriber<T>,
+class ObserverObservable<T>(
+    private val source: OnSubscriber<T>,
     private val thread: Int
-) : LinoOnSubscriber<T> {
+) : OnSubscriber<T> {
 
-    override fun setObserver(downStream: LinoObserver<T>) {
+    override fun setObserver(downStream: Observer<T>) {
         val observer = LinoObserverObserver(downStream, thread)
         source.setObserver(observer)
     }
 
     class LinoObserverObserver<T>(
-        val downStream: LinoObserver<T>,
+        val downStream: Observer<T>,
         val thread: Int
-    ) : LinoObserver<T> {
+    ) : Observer<T> {
 
         override fun onSubscribe() {
             Schedulers.INSTANCE.submitObserverWork({

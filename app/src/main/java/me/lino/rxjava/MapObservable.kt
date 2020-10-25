@@ -7,13 +7,13 @@ package me.lino.rxjava
 //2. 上游 传消息给下游其实是传给了map,
 //3. map 在自己的观察者中在对数据进行进一步的操作之后，将操作之后的数据传递给真正的下游
 
-class LinoMapObservable<T, R>(
-    private val source: LinoOnSubscriber<T>,
+class MapObservable<T, R>(
+    private val source: OnSubscriber<T>,
     private val func: (T) -> R
-) : LinoOnSubscriber<R> {
+) : OnSubscriber<R> {
 
 
-    override fun setObserver(downObserver: LinoObserver<R>) {
+    override fun setObserver(downObserver: Observer<R>) {
         //这时downObserver 才是下游
         val map = LinoMapObserver(downObserver, func) //创建自己的观察者对象
         source.setObserver(map)
@@ -21,9 +21,9 @@ class LinoMapObservable<T, R>(
 
     // 在map自己定义一个观察者，用于接收上游传下来的数据。
     class LinoMapObserver<T, R>(
-        private val downStream: LinoObserver<R>,
+        private val downStream: Observer<R>,
         private val func: ((T) -> R)
-    ) : LinoObserver<T> {
+    ) : Observer<T> {
         override fun onSubscribe() {
             downStream.onSubscribe()
         }

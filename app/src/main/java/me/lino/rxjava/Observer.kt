@@ -2,7 +2,7 @@ package me.lino.rxjava
 
 
 //监听者
-interface LinoObserver<T> {
+interface Observer<T> {
 
     fun onSubscribe()
     fun onNext(t: T)

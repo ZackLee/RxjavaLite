@@ -10,8 +10,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        LinoObservable.create(object : LinoOnSubscriber<Int> {
-            override fun setObserver(observer: LinoObserver<Int>) {
+        Observable.create(object : OnSubscriber<Int> {
+            override fun setObserver(observer: Observer<Int>) {
                 Log.d(TAG, "上游线程：${Thread.currentThread().name}")
                 observer.onNext(6)
                 observer.onNext(66)
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         }).subscribeOn(Schedulers.IO)
             .map { item -> "map 操作符转换后的数据${item}" }
             .observerOn(Schedulers.MAIN)
-            .setObserver(object : LinoObserver<String> {
+            .setObserver(object : Observer<String> {
                 override fun onSubscribe() {
                     Log.d(TAG, "onSubscribe")
                 }
